@@ -1,0 +1,117 @@
+# NeoSmart NeoGrub Bootloader Configuration File
+#
+# This is the NeoGrub configuration file, and should be located at C:\NST\menu.lst
+# Please see the EasyBCD Documentation for information on how to create/modify entries:
+# http://neosmart.net/wiki/display/EBCD/
+
+################################################################################
+
+title Arch Linux
+#insmod efi_gop
+#insmod efi_uga
+#insmod ieee1275_fb
+#insmod vbe
+#insmod vga
+#insmod video_bochs
+#insmod video_cirrus
+#set gfxpayload=keep
+#insmod gzio
+#insmod part_msdos
+#insmod ext2
+#set root='hd0,msdos7'
+#search --no-floppy --fs-uuid --set=root d7679f55-527a-4208-9bba-318570f3a643
+root (hd0,6)
+echo	'Loading Linux linux-lts ...'
+kernel	/boot/vmlinuz-linux-lts root=UUID=d7679f55-527a-4208-9bba-318570f3a643 rw  loglevel=3 quiet
+echo	'Loading initial ramdisk ...'
+initrd	/boot/intel-ucode.img /boot/initramfs-linux-lts.img
+
+################################################################################
+
+title xubuntu-12.04.4-desktop-i386.iso
+set ISO=/files/programs/iso/linux/xubuntu/xubuntu-12.04.4-desktop-i386.iso
+find --set-root %ISO%
+map %ISO% (0xff)
+map --hook
+root (0xff)
+kernel /casper/vmlinuz boot=casper iso-scan/filename=%ISO% noprompt noeject
+initrd /casper/initrd.lz
+
+################################################################################
+
+title xubuntu-14.04.5-desktop-i386.iso
+set ISO=/files/programs/iso/linux/xubuntu/xubuntu-14.04.5-desktop-i386.iso
+find --set-root %ISO%
+map %ISO% (0xff)
+map --hook
+root (0xff)
+kernel /casper/vmlinuz boot=casper iso-scan/filename=%ISO% noprompt noeject
+initrd /casper/initrd.lz
+
+################################################################################
+
+title xubuntu-16.04.6-desktop-i386.iso
+set ISO=/files/programs/iso/linux/xubuntu/xubuntu-16.04.6-desktop-i386.iso
+find --set-root %ISO%
+map %ISO% (0xff)
+map --hook
+root (0xff)
+kernel /casper/vmlinuz boot=casper iso-scan/filename=%ISO% noprompt noeject
+initrd /casper/initrd
+
+################################################################################
+
+title xubuntu-16.04.6-desktop-amd64.iso
+set ISO=/files/programs/iso/linux/xubuntu/xubuntu-16.04.6-desktop-amd64.iso
+find --set-root %ISO%
+map %ISO% (0xff)
+map --hook
+root (0xff)
+kernel /casper/vmlinuz boot=casper iso-scan/filename=%ISO% noprompt noeject
+initrd /casper/initrd
+
+################################################################################
+
+title xubuntu-18.04.5-desktop-i386.iso
+set ISO=/files/programs/iso/linux/xubuntu/xubuntu-18.04.5-desktop-i386.iso
+find --set-root %ISO%
+map %ISO% (0xff)
+map --hook
+root (0xff)
+kernel /casper/vmlinuz boot=casper iso-scan/filename=%ISO% noprompt noeject
+initrd /casper/initrd
+
+################################################################################
+
+title archlinux-2023.07.01-x86_64.iso
+# set isofile=/files/programs/iso/linux/arch-linux/archlinux-2023.07.01-x86_64.iso
+set isofile=/archlinux-2023.07.01-x86_64.iso
+find --set-root %isofile%
+
+uuid %@root%
+set devpath=/dev/disk/by-uuid/%?_UUID%
+
+map %isofile% (0xff)
+map --hook
+root (0xff)
+
+kernel /arch/boot/x86_64/vmlinuz-linux img_dev=%devpath% img_loop=%isofile% earlymodules=loop
+initrd /arch/boot/intel-ucode.img /arch/boot/amd-ucode.img /arch/boot/x86_64/initramfs-linux.img
+
+################################################################################
+
+title archlinux-baseline-2023.07.11-x86_64.iso
+set isofile=/archlinux-2023.07.01-x86_64.iso
+find --set-root %isofile%
+
+uuid %@root%
+set devpath=/dev/disk/by-uuid/%?_UUID%
+
+map %isofile% (0xff)
+map --hook
+root (0xff)
+
+kernel /arch/boot/x86_64/vmlinuz-linux img_dev=%devpath% img_loop=%isofile% earlymodules=loop
+initrd /arch/boot/intel-ucode.img /arch/boot/amd-ucode.img /arch/boot/x86_64/initramfs-linux.img
+
+################################################################################
