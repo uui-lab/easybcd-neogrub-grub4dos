@@ -4,26 +4,24 @@
 # Please see the EasyBCD Documentation for information on how to create/modify entries:
 # http://neosmart.net/wiki/display/EBCD/
 
+# Note:
+# Grub4Dos limitation: variable name can only have maximum 8 letters
+
 ################################################################################
 
 title Arch Linux
-#insmod efi_gop
-#insmod efi_uga
-#insmod ieee1275_fb
-#insmod vbe
-#insmod vga
-#insmod video_bochs
-#insmod video_cirrus
-#set gfxpayload=keep
-#insmod gzio
-#insmod part_msdos
-#insmod ext2
-#set root='hd0,msdos7'
-#search --no-floppy --fs-uuid --set=root d7679f55-527a-4208-9bba-318570f3a643
-root (hd0,6)
-echo	'Loading Linux linux-lts ...'
-kernel	/boot/vmlinuz-linux-lts root=UUID=d7679f55-527a-4208-9bba-318570f3a643 rw  loglevel=3 quiet
-echo	'Loading initial ramdisk ...'
+
+# hardcode choosing partition
+#root (hd0,6)
+#kernel	/boot/vmlinuz-linux-lts root=UUID=d7679f55-527a-4208-9bba-318570f3a643 rw  loglevel=3 quiet
+#echo	'Loading Linux linux-lts ...'
+#echo	'Loading initial ramdisk ...'
+#initrd	/boot/intel-ucode.img /boot/initramfs-linux-lts.img
+
+set kernel=boot/vmlinuz-linux-lts
+find --set-root %kernel%
+uuid %@root%
+kernel	/boot/vmlinuz-linux-lts root=UUID=%?_UUID% rw  loglevel=3 quiet
 initrd	/boot/intel-ucode.img /boot/initramfs-linux-lts.img
 
 ################################################################################
@@ -83,8 +81,14 @@ initrd /casper/initrd
 
 ################################################################################
 
+#
+# arch linux ISO needs to be placed in FAT32 partition because it doesn't have
+# NTFS module in kernel if you place it in NTFS partition, instead it has NTFS3
+# but it doesn't work because to mount it in NTFS3 the ISO need to explicitly
+# use -t ntfs3 in mount command
+#
+
 title archlinux-2023.07.01-x86_64.iso
-# set isofile=/files/programs/iso/linux/arch-linux/archlinux-2023.07.01-x86_64.iso
 set isofile=/archlinux-2023.07.01-x86_64.iso
 find --set-root %isofile%
 
@@ -101,7 +105,7 @@ initrd /arch/boot/intel-ucode.img /arch/boot/amd-ucode.img /arch/boot/x86_64/ini
 ################################################################################
 
 title archlinux-baseline-2023.07.11-x86_64.iso
-set isofile=/archlinux-2023.07.01-x86_64.iso
+set isofile=/archlinux-baseline-2023.07.01-x86_64.iso
 find --set-root %isofile%
 
 uuid %@root%
